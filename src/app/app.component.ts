@@ -1,13 +1,40 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SearchPromptComponent } from './search-prompt/search-prompt.component';
+import { SearchResultsComponent } from './search-results/search-results.component';
+import { SearchService } from './search.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    CommonModule,
+    SearchPromptComponent,
+    SearchResultsComponent,
+    HttpClientModule,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'ymsongsearch-angular';
+  searchResults: string[] = [];
+  errorMessage: string | null = null;
+
+  constructor(private searchService: SearchService) {}
+
+  onSearchChanged(searchTerm: string): void {
+    this.searchService.search(searchTerm).subscribe(
+      (results) => {
+        this.searchResults = results;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.errorMessage =
+          'An error occurred while fetching search results.' +
+          JSON.stringify(error);
+        this.searchResults = [];
+      }
+    );
+  }
 }

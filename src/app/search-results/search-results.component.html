@@ -1,0 +1,8 @@
+<ul>
+  <li *ngFor="let result of results">
+    <a href="{{ serverUrl }}/play/{{ result.id }}" target="noshow">
+      {{ result.title }}</a
+    >
+  </li>
+</ul>
+<iframe name="noshow" style="display: none"></iframe>
